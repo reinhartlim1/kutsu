@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:kutsu/models/user_model.dart';
+import 'package:kutsu/providers/auth_provider.dart';
 import 'package:kutsu/theme.dart';
 import 'package:kutsu/widgets/product_card.dart';
 import 'package:kutsu/widgets/product_tile.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserModel user = authProvider.user;
+
     Widget header() {
       return Container(
         margin: EdgeInsets.only(
@@ -22,14 +28,14 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hallo, Alex',
+                    'Hallo, ${user.name}',
                     style: primaryTextStyle.copyWith(
                       fontSize: 24,
                       fontWeight: semiBold,
                     ),
                   ),
                   Text(
-                    '@alex123',
+                    '@${user.username}',
                     style: subtitleTextStyle.copyWith(
                         fontSize: 18, fontWeight: regular),
                   ),
@@ -39,11 +45,11 @@ class HomePage extends StatelessWidget {
             Container(
               width: 54,
               height: 54,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage(
-                    'assets/image_profile.png',
+                  image: NetworkImage(
+                    user.profilePhotoUrl
                   ),
                 ),
               ),
