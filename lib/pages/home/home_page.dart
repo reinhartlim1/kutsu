@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kutsu/models/user_model.dart';
 import 'package:kutsu/providers/auth_provider.dart';
+import 'package:kutsu/providers/product_provider.dart';
 import 'package:kutsu/theme.dart';
 import 'package:kutsu/widgets/product_card.dart';
 import 'package:kutsu/widgets/product_tile.dart';
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     UserModel user = authProvider.user;
+    ProductProvider productProvider = Provider.of<ProductProvider>(context);
 
     Widget header() {
       return Container(
@@ -48,9 +50,7 @@ class HomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: NetworkImage(
-                    user.profilePhotoUrl
-                  ),
+                  image: NetworkImage(user.profilePhotoUrl.toLowerCase()),
                 ),
               ),
             ),
@@ -208,12 +208,14 @@ class HomePage extends StatelessWidget {
               SizedBox(
                 width: defaultMargin,
               ),
-              const Row(
-                children: [
-                  ProductCard(),
-                  ProductCard(),
-                  ProductCard(),
-                ],
+              Row(
+                children: productProvider.products
+                    .map(
+                      (product) => ProductCard(
+                        product: product,
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ),
@@ -243,13 +245,14 @@ class HomePage extends StatelessWidget {
         margin: const EdgeInsets.only(
           top: 14,
         ),
-        child: const Column(
-          children: [
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-          ],
+        child: Column(
+          children: productProvider.products
+              .map(
+                (product) => ProductTile(
+                  product: product,
+                ),
+              )
+              .toList(),
         ),
       );
     }

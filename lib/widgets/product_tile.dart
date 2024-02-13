@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:kutsu/models/product_model.dart';
+import 'package:kutsu/pages/home/product_page.dart';
 import 'package:kutsu/theme.dart';
 
 class ProductTile extends StatelessWidget {
-  const ProductTile({super.key});
+  final ProductModel product;
+  const ProductTile({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/product');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(
+              product: product,
+            ),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(
@@ -35,7 +48,7 @@ class ProductTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Football',
+                    product.category.name,
                     style: secondaryTextStyle.copyWith(
                       fontSize: 12,
                     ),
@@ -44,15 +57,18 @@ class ProductTile extends StatelessWidget {
                     height: 6,
                   ),
                   Text(
-                    'Predator 20.3 Firm Ground',
+                    product.name,
                     style: primaryTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
+                      fontSize: 16,
+                      fontWeight: semiBold,
+                    ),
+                    maxLines: 1,
                   ),
                   const SizedBox(
                     height: 6,
                   ),
                   Text(
-                    '\$68,47',
+                    '\$${product.price}',
                     style: priceTextStyle.copyWith(
                       fontWeight: medium,
                     ),

@@ -157,7 +157,7 @@ class EditProfilePage extends StatelessWidget {
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: NetworkImage(
-                    user.profilePhotoUrl,
+                    user.profilePhotoUrl.toLowerCase(),
                   ),
                 ),
               ),

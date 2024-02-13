@@ -1,9 +1,17 @@
 import "package:carousel_slider/carousel_slider.dart";
 import "package:flutter/material.dart";
+import "package:kutsu/models/product_model.dart";
+import "package:kutsu/providers/cart_provider.dart";
+import "package:kutsu/providers/wishlist_provider.dart";
 import "package:kutsu/theme.dart";
+import "package:provider/provider.dart";
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key});
+  final ProductModel product;
+  const ProductPage({
+    super.key,
+    required this.product,
+  });
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -33,10 +41,14 @@ class _ProductPageState extends State<ProductPage> {
   ];
 
   int currentIndex = 0;
-  bool isWishlist = false;
-
+  
   @override
   Widget build(BuildContext context) {
+
+    WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+
+
     Future<void> showSuccessDialog() async {
       return showDialog(
         context: context,
@@ -66,7 +78,7 @@ class _ProductPageState extends State<ProductPage> {
                     'assets/icon_success.png',
                     width: 100,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
                   Text(
@@ -76,14 +88,14 @@ class _ProductPageState extends State<ProductPage> {
                       fontWeight: semiBold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
                   Text(
                     'Item added successfully',
                     style: secondaryTextStyle,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
@@ -96,7 +108,9 @@ class _ProductPageState extends State<ProductPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/cart');
+                      },
                       child: Text(
                         'View My Cart',
                         style: primaryTextStyle.copyWith(
@@ -173,14 +187,14 @@ class _ProductPageState extends State<ProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "TERREX URBAN LOW",
+                          widget.product.name,
                           style: primaryTextStyle.copyWith(
                             fontSize: 18,
                             fontWeight: semiBold,
                           ),
                         ),
                         Text(
-                          "Hiking",
+                          widget.product.category.name,
                           style: secondaryTextStyle.copyWith(
                             fontSize: 12,
                           ),
@@ -190,17 +204,13 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(
-                        () {
-                          isWishlist = !isWishlist;
-                        },
-                      );
+                        wishlistProvider.setProduct(widget.product);
 
-                      if (isWishlist) {
+                      if (wishlistProvider.isWishlist(widget.product)) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: secondaryColor,
-                            content: Text(
+                            content: const Text(
                               'Has been added to the wishlist',
                               textAlign: TextAlign.center,
                             ),
@@ -210,7 +220,7 @@ class _ProductPageState extends State<ProductPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: alertColor,
-                            content: Text(
+                            content: const Text(
                               'Has been removed from the wishlist',
                               textAlign: TextAlign.center,
                             ),
@@ -219,7 +229,7 @@ class _ProductPageState extends State<ProductPage> {
                       }
                     },
                     child: Image.asset(
-                      isWishlist
+                      wishlistProvider.isWishlist(widget.product)
                           ? 'assets/button_wishlist_active.png'
                           : 'assets/button_wishlist.png',
                       width: 46,
@@ -248,7 +258,7 @@ class _ProductPageState extends State<ProductPage> {
                     style: primaryTextStyle,
                   ),
                   Text(
-                    '\$143,98',
+                    '\$${widget.product.price}',
                     style: priceTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,
@@ -277,7 +287,7 @@ class _ProductPageState extends State<ProductPage> {
                     height: 12,
                   ),
                   Text(
-                    'Unpaved trails and mixed surfaces are easy when you have the traction and support you need. Casual enough for the daily commute.',
+                    widget.product.description,
                     style: subtitleTextStyle.copyWith(
                       fontWeight: light,
                     ),
@@ -364,6 +374,7 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         ),
                         onPressed: () {
+                          cartProvider.addCart(widget.product);
                           showSuccessDialog();
                         },
                         child: Text(

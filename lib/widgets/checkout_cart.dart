@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kutsu/models/cart_model.dart';
 import 'package:kutsu/theme.dart';
 
 class CheckoutCard extends StatelessWidget {
-  const CheckoutCard({super.key});
+  final CartModel cart;
+  const CheckoutCard({
+    super.key,
+    required this.cart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +16,10 @@ class CheckoutCard extends StatelessWidget {
         color: backgroundColor4,
         borderRadius: BorderRadius.circular(12),
       ),
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         top: 12,
       ),
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
       child: Row(
         children: [
           Container(
@@ -22,14 +27,14 @@ class CheckoutCard extends StatelessWidget {
             height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
+              image: const DecorationImage(
                 image: AssetImage(
                   'assets/image_shoes.png',
                 ),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 12,
           ),
           Expanded(
@@ -37,27 +42,27 @@ class CheckoutCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Terrex Urban Low',
+                  cart.product.name,
                   style: primaryTextStyle.copyWith(
                     fontWeight: semiBold,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 2,
                 ),
                 Text(
-                  '\$143,98',
+                  '\$${cart.product.price}',
                   style: priceTextStyle,
                 ),
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 12,
           ),
           Text(
-            '2 Items',
+            '${cart.quantity} Items',
             style: secondaryTextStyle.copyWith(
               fontSize: 12,
             ),
