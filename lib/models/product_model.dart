@@ -6,7 +6,7 @@ class ProductModel {
   late String name;
   late double price;
   late String description;
-  late String tags;
+  late String? tags;
   late CategoryModel category;
   late DateTime createdAt;
   late DateTime updatedAt;
@@ -32,7 +32,7 @@ class ProductModel {
     tags = json['tags'];
     category = CategoryModel.fromJson(json['category']);
     galleries = json['galleries']
-        .map((gallery) => GalleryModel.fromJson(gallery))
+        .map<GalleryModel>((gallery) => GalleryModel.fromJson(gallery))
         .toList();
     createdAt = DateTime.parse(json['created_at']);
     updatedAt = DateTime.parse(json['updated_at']);
